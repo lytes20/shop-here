@@ -11,7 +11,15 @@ export class ProductListComponent {
   imageWidth: number = 50;
   imageMargin: number = 2;
   showImage: boolean = false;
-  listFilter: string = 'cart';
+  _listFilter: string;
+  get listFilter(): string {
+    return this._listFilter;
+  }
+  set listFilter(value: string) {
+    (this._listFilter = value);
+    this.filteredProducts = this._listFilter ? this.performFilter(this._listFilter) : this.products;
+  }
+  filteredProducts: IProduct[];
   products: IProduct[] = [
     {
       productId: 100,
@@ -26,7 +34,7 @@ export class ProductListComponent {
     },
     {
       productId: 100,
-      productName: 'Loafer',
+      productName: 'Jordans',
       starRating: 4,
       productCode: 'xyz-120',
       releaseDate: '12-01-2019',
@@ -37,7 +45,7 @@ export class ProductListComponent {
     },
     {
       productId: 100,
-      productName: 'Loafer',
+      productName: 'Air Max',
       starRating: 4,
       productCode: 'xyz-120',
       releaseDate: '12-01-2019',
@@ -48,8 +56,15 @@ export class ProductListComponent {
     }
   ];
 
+  constructor(){
+    this.filteredProducts = this.products
+  }
   toggleImage(): void {
     this.showImage = !this.showImage;
     console.log('Toggle Image Button Clicked');
+  }
+  performFilter(filterBy: string): IProduct[] {
+    filterBy = filterBy.toLocaleLowerCase();
+    return this.products.filter((product: IProduct) => product.productName.toLocaleLowerCase().indexOf(filterBy) !== -1);
   }
 }
